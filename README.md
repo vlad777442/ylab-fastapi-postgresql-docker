@@ -2,12 +2,12 @@
 
 ## To start this app do the following steps:
 
-Создайте виртуальную среду: python -m venv venv
+1. Создайте виртуальную среду: python -m venv venv
 
-Установите зависимости: pip install -r requirements.txt
 
-Измените ".env" для ваших переменных окружения
 
-Запустите приложение docker-compose up -d
+2. Измените ".env" для ваших переменных окружения
 
-Запустите тесты docker-compose -f "docker-compose.tests.yml" up
+3. Запустите приложение docker-compose up -d
+
+4. Запустите тесты docker-compose -f "docker-compose.tests.yml" up
