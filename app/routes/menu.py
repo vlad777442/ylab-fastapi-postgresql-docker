@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.crud import menu
 from app.schemas.menu import MenuGet, MenuCreate, MenuUpdate
-from app.database import get_db
+from app.db.database import get_db
 
 
 router = APIRouter()

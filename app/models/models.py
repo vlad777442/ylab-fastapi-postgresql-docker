@@ -1,7 +1,7 @@
-from app.database import Base
+from app.db.database import Base
 from sqlalchemy import Column, Integer, String, ForeignKey, Identity, Float, select
 from sqlalchemy.orm import relationship, column_property
-from sqlalchemy import func, distinct
+from sqlalchemy import func
 
 
 class Dish(Base):
@@ -24,7 +24,7 @@ class Submenu(Base):
     menu = relationship('Menu', back_populates='submenus')
     dishes = relationship(
         'Dish', back_populates='submenus',
-        cascade="save-update, merge, delete", passive_deletes=True
+        cascade="all,delete", passive_deletes=True
     )
     dishes = relationship(
         'Dish', back_populates='submenus',
@@ -47,7 +47,7 @@ class Menu(Base):
     description = Column(String)
     submenus = relationship(
         "Submenu",
-        cascade="save-update, merge, delete", passive_deletes=True, back_populates="menu"
+        cascade="all,delete", passive_deletes=True, back_populates="menu"
     )
     submenus_count = column_property(
         select(func.count(Submenu.id))

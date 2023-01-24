@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from app.routes import dish, submenu, menu
 
-from app.database import Base, engine, get_db
-from app.models.models import Menu, Submenu, Dish
+from app.db.database import Base, engine
 
 app = FastAPI()
 
@@ -16,8 +15,6 @@ app = FastAPI()
 #     db.close()
 Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
-
-
 
 
 
