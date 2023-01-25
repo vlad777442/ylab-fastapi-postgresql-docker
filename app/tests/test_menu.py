@@ -22,10 +22,10 @@ def test_get_menu_by_id(client):
         'description': 'New menu description',
         'id': '1',
         'submenus_count': 1,
-        'dishes_count': 0
+        'dishes_count': 1
     }
 
-def test_create_menu(client):
+def test_create_menu(client, db):
     test_data = {"title": "MenuTest", "description": "MenuTest description"}
     response = client.post(router_menu, content=json.dumps(test_data))
     assert response.status_code == 201
@@ -37,7 +37,7 @@ def test_create_menu(client):
         'dishes_count': 0
     }
 
-def test_update_menu(client):
+def test_update_menu(client, menu_1, db):
     response = client.patch(
         router_menu_id.format(id=1),
         json={
@@ -51,10 +51,10 @@ def test_update_menu(client):
         'description': 'Updated menu description',
         'id': '1',
         'submenus_count': 1,
-        'dishes_count': 0
+        'dishes_count': 1
     }
 
-def test_update_menu_not_found(client):
+def test_update_menu_not_found(client, db):
     response = client.patch(
         router_menu_id.format(id=5),
         json={'title': 'My updated menu', 'description': 'My updated menu description'},
@@ -62,7 +62,7 @@ def test_update_menu_not_found(client):
     assert response.status_code == 404
     assert response.json() == {'detail': 'menu not found'}
 
-def test_delete_menu(client):
+def test_delete_menu(client, menu_1, db):
     response = client.delete(router_menu_id.format(id=1))
     assert response.status_code == 200
     assert response.json() == {'message': 'The menu has been deleted'}

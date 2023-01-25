@@ -26,10 +26,6 @@ class Submenu(Base):
         'Dish', back_populates='submenus',
         cascade="all,delete", passive_deletes=True
     )
-    dishes = relationship(
-        'Dish', back_populates='submenus',
-        cascade='all, delete', passive_deletes=True
-    )
     dishes_count = column_property(
         select(func.count(Dish.id))
         .where(Dish.submenu_id == id)

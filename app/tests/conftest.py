@@ -41,6 +41,8 @@ def db():
     finally:
         db.close()
 
+
+
 @pytest.fixture(scope='module')
 def client():
     client = TestClient(app=app)
