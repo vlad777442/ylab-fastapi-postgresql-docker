@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from app.models.models import Menu
-#from app.schemas import schemas
 from app.schemas import menu
+
 
 def get_menus(db: Session):
     return db.query(Menu).all()
