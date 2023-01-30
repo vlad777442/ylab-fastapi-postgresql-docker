@@ -11,6 +11,9 @@ router = APIRouter()
 
 @router.get('/submenus', response_model=list[SubmenuGet])
 def get_submenus(menu_id: int, db: Session = Depends(get_db)):
+    """
+        Возвращает список всех подменю
+    """
     if is_cached(f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus"):
         return get_cache(f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus")
 
@@ -23,6 +26,9 @@ def get_submenus(menu_id: int, db: Session = Depends(get_db)):
 
 @router.get("/submenus/{submenu_id}", response_model=SubmenuGet)
 def get_submenu(menu_id: int, submenu_id: int, db: Session = Depends(get_db)):
+    """
+        Возвращает список подменю
+    """
     if is_cached(f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus/{submenu_id}"):
         return get_cache(f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus/{submenu_id}")
 
@@ -37,6 +43,9 @@ def get_submenu(menu_id: int, submenu_id: int, db: Session = Depends(get_db)):
 
 @router.post("/submenus", response_model=SubmenuGet, status_code=201)
 def create_submenu(menu_id: int, subm: SubmenuCreate, db: Session = Depends(get_db)):
+    """
+        Создает подменю
+    """
     db_submenu = submenu.get_submenu_by_title(db, title=subm.title)
     if db_submenu:
         raise HTTPException(
@@ -53,6 +62,9 @@ def create_submenu(menu_id: int, subm: SubmenuCreate, db: Session = Depends(get_
 
 @router.patch("/submenus/{submenu_id}", response_model=SubmenuGet)
 def update_submenu(menu_id: int, submenu_id: int, subm: SubmenuUpdate, db: Session = Depends(get_db)):
+    """
+        Обновляет определенное подменю
+    """
     db_submenu = submenu.get_submenu(db, submenu_id=submenu_id)
     if db_submenu is None:
         raise HTTPException(status_code=404, detail="submenu not found")
@@ -68,6 +80,9 @@ def update_submenu(menu_id: int, submenu_id: int, subm: SubmenuUpdate, db: Sessi
 
 @router.delete("/submenus/{submenu_id}")
 def delete_submenu(menu_id: int, submenu_id: int, db: Session = Depends(get_db)):
+    """
+        Удаляеь определенное меню
+    """
     db_submenu = submenu.get_submenu(db, submenu_id=submenu_id)
     if db_submenu is None:
         raise HTTPException(status_code=404, detail="submenu not found")

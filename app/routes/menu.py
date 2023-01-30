@@ -11,6 +11,9 @@ menu_url = "http://127.0.0.1:8000/api/v1/menus"
 
 @router.get('/menus', response_model=list[MenuGet])
 def get_menus(request: Request, db: Session = Depends(get_db)):
+    """
+        Возвращает список всех меню
+    """
     if not (get_cache(request.url._url)) is None:
         return get_cache(request.url._url)
 
@@ -25,7 +28,9 @@ def get_menus(request: Request, db: Session = Depends(get_db)):
 
 @router.get("/menus/{menu_id}", response_model=MenuGet)
 def get_menu(request: Request, menu_id: int, db: Session = Depends(get_db)):
-
+    """
+        Возвращает список меню по id
+    """
     if is_cached(request.url._url):
         return get_cache(request.url._url)
 
@@ -39,6 +44,9 @@ def get_menu(request: Request, menu_id: int, db: Session = Depends(get_db)):
 
 @router.post("/menus", response_model=MenuGet, status_code=201)
 def create_menu(new_menu: MenuCreate, db: Session = Depends(get_db)):
+    """
+        Создает новое меню
+    """
     db_menu = menu.get_menu_by_title(db, title=new_menu.title)
     if db_menu:
         raise HTTPException(
@@ -52,6 +60,9 @@ def create_menu(new_menu: MenuCreate, db: Session = Depends(get_db)):
 
 @router.patch("/menus/{menu_id}", response_model=MenuGet)
 def update_menu(menu_id: int, new_menu: MenuUpdate, db: Session = Depends(get_db)):
+    """
+        Обновляет определенное менб по id
+    """
     db_menu = menu.get_menu(db, menu_id=menu_id)
     if db_menu is None:
         raise HTTPException(status_code=404, detail="menu not found")
@@ -66,6 +77,9 @@ def update_menu(menu_id: int, new_menu: MenuUpdate, db: Session = Depends(get_db
 
 @router.delete("/menus/{menu_id}")
 def delete_menu(menu_id: int, db: Session = Depends(get_db)):
+    """
+        Удаляет определенное меню
+    """
     db_menu = menu.get_menu(db, menu_id=menu_id)
     if db_menu is None:
         raise HTTPException(status_code=404, detail="menu not found")

@@ -11,6 +11,9 @@ router = APIRouter()
 
 @router.get('/dishes', response_model=list[DishGet])
 def get_dishes(request: Request, db: Session = Depends(get_db)):
+    """
+        Возвращает список всех блюд, принадлежащих подменю
+    """
     if get_cache(request.url._url):
         return get_cache(request.url._url)
 
@@ -22,7 +25,9 @@ def get_dishes(request: Request, db: Session = Depends(get_db)):
 
 @router.get("/dishes/{dish_id}", response_model=DishGet)
 def get_dish(request: Request, dish_id: int, db: Session = Depends(get_db)):
-
+    """
+        Возвращает определенное блюдо
+    """
     if is_cached(request.url._url):
         return get_cache(request.url._url)
 
@@ -36,6 +41,9 @@ def get_dish(request: Request, dish_id: int, db: Session = Depends(get_db)):
 
 @router.post("/dishes", response_model=DishGet, status_code=201)
 def create_dish(request: Request, menu_id: int, submenu_id: int, d: DishCreate, db: Session = Depends(get_db)):
+    """
+        Создает новое блюдо
+    """
     db_dish = dish.get_dish_by_title(db, title=d.title)
     if db_dish:
         raise HTTPException(
@@ -55,6 +63,9 @@ def create_dish(request: Request, menu_id: int, submenu_id: int, d: DishCreate, 
 @router.patch("/dishes/{dish_id}", response_model=DishGet)
 def update_dish(request: Request, menu_id: int, submenu_id: int, dish_id: int, d: DishUpdate,
                 db: Session = Depends(get_db)):
+    """
+        Обновляет определенное блюдо
+    """
     db_dish = dish.get_dish(db, dish_id=dish_id)
     if db_dish is None:
         raise HTTPException(status_code=404, detail="dish not found")
@@ -69,6 +80,9 @@ def update_dish(request: Request, menu_id: int, submenu_id: int, dish_id: int, d
 
 @router.delete("/dishes/{dish_id}")
 def delete_submenu(menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(get_db)):
+    """
+        Удаляет определенное блюдо
+    """
     db_dish = dish.get_dish(db, dish_id=dish_id)
     if db_dish is None:
         raise HTTPException(status_code=404, detail="dish not found")
