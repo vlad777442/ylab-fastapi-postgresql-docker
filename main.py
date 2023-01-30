@@ -17,12 +17,11 @@ Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
 
-
 app.include_router(
-        menu.router,
-        prefix='/api/v1',
-        tags=['menu']
-    )
+    menu.router,
+    prefix='/api/v1',
+    tags=['menu']
+)
 app.include_router(
     submenu.router,
     prefix='/api/v1/menus/{menu_id}',
@@ -33,7 +32,6 @@ app.include_router(
     prefix='/api/v1/menus/{menu_id}/submenus/{submenu_id}',
     tags=['dish']
 )
-
 
 
 #

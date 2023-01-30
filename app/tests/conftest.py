@@ -1,5 +1,6 @@
-import pytest
-from fastapi.testclient import TestClient
+from app.models.models import Dish
+from app.models.models import Menu
+from app.models.models import Submenu
 from main import app
 
 import pytest
@@ -8,18 +9,19 @@ from fastapi.testclient import TestClient
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.db.database import Base, get_db
+from app.db.database import Base
 
 load_dotenv()
 
 SQLALCHEMY_DATABASE_URL = (f'postgresql://{os.getenv("DB_USER")}:'
-                                f'{os.getenv("DB_PASS")}@'
-                                f'{os.getenv("DB_HOST")}:'
-                                f'{os.getenv("DB_PORT")}/'
-                                f'{os.getenv("DB_NAME")}')
+                           f'{os.getenv("DB_PASS")}@'
+                           f'{os.getenv("DB_HOST")}:'
+                           f'{os.getenv("DB_PORT")}/'
+                           f'{os.getenv("DB_NAME")}')
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
-TestingSessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
+TestingSessionLocal = sessionmaker(
+    bind=engine, autocommit=False, autoflush=False)
 
 
 # def override_get_db():
@@ -42,15 +44,11 @@ def db():
         db.close()
 
 
-
 @pytest.fixture(scope='module')
 def client():
     client = TestClient(app=app)
     yield client
 
-
-
-from app.models.models import Submenu
 
 @pytest.fixture(scope="session")
 def submenu_1(db, menu_1):
@@ -73,8 +71,6 @@ def submenu_1(db, menu_1):
     )
 
 
-from app.models.models import Menu
-
 @pytest.fixture(scope="session")
 def menu_1(db):
     title = 'New menu'
@@ -91,7 +87,6 @@ def menu_1(db):
         submenus_count=new_menu.submenus_count
     )
 
-from app.models.models import Dish
 
 @pytest.fixture(scope="session")
 def dish_1(db, submenu_1):

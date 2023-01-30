@@ -6,8 +6,10 @@ from app.schemas import menu
 def get_menus(db: Session):
     return db.query(Menu).all()
 
+
 def get_menu(db: Session, menu_id: int):
     return db.query(Menu).filter(Menu.id == menu_id).first()
+
 
 def get_menu_by_title(db: Session, title: str):
     return db.query(Menu).filter(Menu.title == title).first()
@@ -21,7 +23,6 @@ def create_menu(db: Session, menu: menu.MenuCreate):
     db.refresh(new_menu)
 
     return new_menu
-
 
 
 def update_menu(db: Session, menu: menu.MenuUpdate, menu_id: int):

@@ -8,17 +8,20 @@ class Dish(Base):
     __tablename__ = "dishes"
 
     id = Column(Integer, Identity(always=True), primary_key=True)
-    submenu_id = Column(Integer, ForeignKey("submenus.id", ondelete='CASCADE'), nullable=False)
+    submenu_id = Column(Integer, ForeignKey(
+        "submenus.id", ondelete='CASCADE'), nullable=False)
     submenus = relationship('Submenu', back_populates='dishes')
     title = Column(String, nullable=False, unique=True)
     description = Column(String, nullable=False)
     price = Column(Float)
 
+
 class Submenu(Base):
     __tablename__ = "submenus"
 
     id = Column(Integer, Identity(always=True), primary_key=True)
-    menu_id = Column(Integer, ForeignKey('menus.id', ondelete='CASCADE'), nullable=False)
+    menu_id = Column(Integer, ForeignKey(
+        'menus.id', ondelete='CASCADE'), nullable=False)
     title = Column(String, nullable=False, unique=True)
     description = Column(String, nullable=False)
     menu = relationship('Menu', back_populates='submenus')
@@ -32,7 +35,6 @@ class Submenu(Base):
         .correlate_except(Dish)
         .scalar_subquery()
     )
-
 
 
 class Menu(Base):

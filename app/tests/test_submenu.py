@@ -1,6 +1,6 @@
-
 router_submenu = '/api/v1/menus/1/submenus/'
 router_submenu_id = 'api/v1/menus/1/submenus/{id}/'
+
 
 def test_get_empty_submenu(client):
     response = client.get(router_submenu)
@@ -11,6 +11,7 @@ def test_get_empty_submenu(client):
 #     response = client.get(router_submenu_id.format(id=1))
 #     assert response.status_code == 200
 #     assert response.json() == (dict(submenu_1))
+
 
 def test_get_submenu_not_found(client):
     response = client.get(router_submenu_id.format(id=1))
@@ -29,10 +30,13 @@ def test_get_submenu_not_found(client):
 #         'id': '2',
 #         'dishes_count': 0,
 #     }
+
+
 def test_create_submenu1(client):
     response = client.post(
         "/api/v1/menus/2/submenus",
-        json={"title": "My submenu 2", "description": "My submenu description 2", "dishes_count": 0},
+        json={"title": "My submenu 2",
+              "description": "My submenu description 2", "dishes_count": 0},
     )
     assert response.json() == {
         "id": "2",
@@ -41,10 +45,12 @@ def test_create_submenu1(client):
         "dishes_count": 0,
     }
 
+
 def test_update_submenu(client, db):
     response = client.patch(
         router_submenu_id.format(id=2),
-        json={'title': 'My updated submenu', 'description': 'My updated submenu description'},
+        json={'title': 'My updated submenu',
+              'description': 'My updated submenu description'},
     )
     assert response.status_code == 200
     assert response.json() == {
@@ -54,13 +60,16 @@ def test_update_submenu(client, db):
         'dishes_count': 0
     }
 
+
 def test_update_submenu_not_found(client):
     response = client.patch(
         router_submenu_id.format(id=5),
-        json={'title': 'My updated submenu', 'description': 'My updated submenu description'},
+        json={'title': 'My updated submenu',
+              'description': 'My updated submenu description'},
     )
     assert response.status_code == 404
     assert response.json() == {'detail': 'submenu not found'}
+
 
 def test_delete_submenu(client, db):
     resp = client.delete(
@@ -68,6 +77,7 @@ def test_delete_submenu(client, db):
     )
     assert resp.status_code == 200
     assert resp.json() == {'message': 'The submenu has been deleted'}
+
 
 def test_delete_submenu_not_found(client):
     resp = client.delete(

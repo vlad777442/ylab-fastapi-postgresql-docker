@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 # from app.schemas import schemas
 from app.schemas import submenu
 
+
 def get_submenus(db: Session):
     return db.query(Submenu).all()
 
@@ -21,7 +22,6 @@ def create_submenu(menu_id: str, submenu: submenu.SubmenuCreate, db: Session):
     db.commit()
     db.refresh(db_submenu)
     return db_submenu
-
 
 
 def update_submenu(db: Session, submenu: submenu.SubmenuUpdate, submenu_id: int):

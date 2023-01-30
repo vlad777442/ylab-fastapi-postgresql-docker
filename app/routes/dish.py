@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
@@ -11,14 +9,13 @@ from app.db.cache_redis.cache_utils import get_cache, set_cache, is_cached, dele
 router = APIRouter()
 
 
-@router.get('/dishes', response_model=List[DishGet])
+@router.get('/dishes', response_model=list[DishGet])
 def get_dishes(request: Request, db: Session = Depends(get_db)):
     if get_cache(request.url._url):
         return get_cache(request.url._url)
 
-
     dishes = dish.get_dishes(db)
-    # set_cache("dish", "all", dishes)
+
     set_cache(request.url._url, dishes)
     return dishes
 
@@ -41,14 +38,16 @@ def get_dish(request: Request, dish_id: int, db: Session = Depends(get_db)):
 def create_dish(request: Request, menu_id: int, submenu_id: int, d: DishCreate, db: Session = Depends(get_db)):
     db_dish = dish.get_dish_by_title(db, title=d.title)
     if db_dish:
-        raise HTTPException(status_code=400, detail="dish with this title already exist")
+        raise HTTPException(
+            status_code=400, detail="dish with this title already exist")
 
-    delete_cache(f"http://127.0.0.1:8000/api/v1/menus")
+    delete_cache("http://127.0.0.1:8000/api/v1/menus")
     delete_cache(f"http://127.0.0.1:8000/api/v1/menus/{menu_id}")
     delete_cache(f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus")
-    delete_cache(f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus/{submenu_id}")
-    delete_cache(f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes")
-
+    delete_cache(
+        f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus/{submenu_id}")
+    delete_cache(
+        f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes")
 
     return dish.create_dish(db=db, dish=d, submenu_id=submenu_id)
 
@@ -62,7 +61,8 @@ def update_dish(request: Request, menu_id: int, submenu_id: int, dish_id: int, d
 
     updated_dish = dish.update_dish(db=db, dish=d, dish_id=dish_id)
     set_cache(request.url._url, updated_dish)
-    delete_cache(f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes")
+    delete_cache(
+        f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes")
 
     return updated_dish
 
@@ -74,8 +74,9 @@ def delete_submenu(menu_id: int, submenu_id: int, dish_id: int, db: Session = De
         raise HTTPException(status_code=404, detail="dish not found")
     dish.delete_dish(db=db, dish_id=dish_id)
 
-    delete_cache(f"http://127.0.0.1:8000/api/v1/menus")
+    delete_cache("http://127.0.0.1:8000/api/v1/menus")
     delete_cache(f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus")
-    delete_cache(f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes")
+    delete_cache(
+        f"http://127.0.0.1:8000/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes")
 
     return {"message": "The dish has been deleted"}

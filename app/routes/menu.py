@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from app.crud import menu
@@ -9,7 +8,8 @@ from app.db.cache_redis.cache_utils import get_cache, set_cache, is_cached, dele
 router = APIRouter()
 menu_url = "http://127.0.0.1:8000/api/v1/menus"
 
-@router.get('/menus', response_model=List[MenuGet])
+
+@router.get('/menus', response_model=list[MenuGet])
 def get_menus(request: Request, db: Session = Depends(get_db)):
     if not (get_cache(request.url._url)) is None:
         return get_cache(request.url._url)
@@ -21,6 +21,7 @@ def get_menus(request: Request, db: Session = Depends(get_db)):
 
     set_cache(request.url._url, menus_cache)
     return menus_cache
+
 
 @router.get("/menus/{menu_id}", response_model=MenuGet)
 def get_menu(request: Request, menu_id: int, db: Session = Depends(get_db)):
@@ -35,16 +36,19 @@ def get_menu(request: Request, menu_id: int, db: Session = Depends(get_db)):
 
     return db_menu
 
+
 @router.post("/menus", response_model=MenuGet, status_code=201)
 def create_menu(new_menu: MenuCreate, db: Session = Depends(get_db)):
     db_menu = menu.get_menu_by_title(db, title=new_menu.title)
     if db_menu:
-        raise HTTPException(status_code=400, detail="menu with this title already exist")
+        raise HTTPException(
+            status_code=400, detail="menu with this title already exist")
 
     new_menu = menu.create_menu(db=db, menu=new_menu)
     delete_cache("http://127.0.0.1:8000/api/v1/menus")
 
     return new_menu
+
 
 @router.patch("/menus/{menu_id}", response_model=MenuGet)
 def update_menu(menu_id: int, new_menu: MenuUpdate, db: Session = Depends(get_db)):
@@ -59,6 +63,7 @@ def update_menu(menu_id: int, new_menu: MenuUpdate, db: Session = Depends(get_db
 
     return updated_menu
 
+
 @router.delete("/menus/{menu_id}")
 def delete_menu(menu_id: int, db: Session = Depends(get_db)):
     db_menu = menu.get_menu(db, menu_id=menu_id)
@@ -66,8 +71,7 @@ def delete_menu(menu_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="menu not found")
     menu.delete_menu(db=db, menu_id=menu_id)
 
-    delete_cache(f"http://127.0.0.1:8000/api/v1/menus")
+    delete_cache("http://127.0.0.1:8000/api/v1/menus")
     delete_cache(f"http://127.0.0.1:8000/api/v1/menus/{menu_id}")
-
 
     return {"message": "The menu has been deleted"}
