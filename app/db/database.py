@@ -12,8 +12,18 @@ Base = declarative_base()
 
 
 def get_db():
+    # Base.metadata.drop_all(bind=engine)
+    # Base.metadata.create_all(bind=engine)
+
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+
+def clear_db(Base, engine):
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
+
+# clear_db(Base, engine)

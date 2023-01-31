@@ -2,7 +2,6 @@ from app.models.models import Dish
 from app.models.models import Menu
 from app.models.models import Submenu
 from main import app
-
 import pytest
 import os
 from fastapi.testclient import TestClient
@@ -18,11 +17,20 @@ SQLALCHEMY_DATABASE_URL = (f'postgresql://{os.getenv("DB_USER")}:'
                            f'{os.getenv("DB_HOST")}:'
                            f'{os.getenv("DB_PORT")}/'
                            f'{os.getenv("DB_NAME")}')
+# SQLALCHEMY_DATABASE_URL = (f'postgresql://{os.getenv("TEST_DB_USER")}:'
+#                            f'{os.getenv("TEST_DB_PASS")}@'
+#                            f'{os.getenv("TEST_DB_HOST")}:'
+#                            f'{os.getenv("TEST_DB_PORT")}/'
+#                            f'{os.getenv("TEST_DB_NAME")}')
+
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 TestingSessionLocal = sessionmaker(
     bind=engine, autocommit=False, autoflush=False)
 
+# clear_db(Base, engine)
+# Base.metadata.drop_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 # def override_get_db():
 #     try:

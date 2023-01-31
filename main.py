@@ -13,6 +13,7 @@ app = FastAPI()
 #     db.query(Dish).delete()
 #     db.commit()
 #     db.close()
+
 Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
@@ -32,10 +33,3 @@ app.include_router(
     prefix='/api/v1/menus/{menu_id}/submenus/{submenu_id}',
     tags=['dish']
 )
-
-
-#
-#
-# @app.get("/hello/{name}")
-# async def say_hello(name: str):
-#     return {"message": f"Hello {name}"}
