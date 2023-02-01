@@ -32,7 +32,7 @@ def test_get_dish(client, dish_1):
     )
     assert response.status_code == 200
     assert response.json() == {
-        'title': 'My dish',
+        'title': 'My updated dish',
         'description': 'Dish description',
         'id': '1',
         'price': '13.99'
